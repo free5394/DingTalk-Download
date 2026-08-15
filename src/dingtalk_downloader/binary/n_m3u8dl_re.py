@@ -17,6 +17,7 @@ import logging
 from typing import Dict, Optional, List
 from ..config.yaml_config import YamlConfig
 from ..config.header_manager import HeaderManager
+from ..config.constants import N_M3U8DL_RE_TIMEOUT
 
 logger = logging.getLogger(__name__)
 
@@ -133,7 +134,14 @@ class NM3u8DLRE:
                 m3u8_file, save_name, save_dir, prefix, cookies_data, headers
             )
             logger.debug(f"执行命令: {' '.join(command)}")
-            result = subprocess.run(command, capture_output=True, text=True)
+            result = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                shell=False,
+                check=False,
+                timeout=N_M3U8DL_RE_TIMEOUT,
+            )
 
             if result.returncode != 0:
                 logger.error(f"视频下载失败 - 子进程退出码: {result.returncode}")
