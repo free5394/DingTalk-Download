@@ -4,8 +4,10 @@
 .idea/
 .history/
 
-
+# opencode
 .opencode/
+.sisyphus/
+.omo/
 
 # claude
 .claude/
@@ -19,11 +21,13 @@ CLAUDE.local.md
 
 # Python缓存文件
 __pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
 *.pyc
 *.pyo
 *.pyd
-.pytest_cache/
-.pyre/
 *.py[cod]
 *$py.class
 *.so
@@ -31,6 +35,7 @@ __pycache__/
 
 # 环境文件
 venv/
+.venv/
 env/
 ENV/
 .env
@@ -59,6 +64,7 @@ build/
 *.egg
 
 # Config
+.review-venv/
 .env
 config.toml
 
@@ -68,6 +74,9 @@ config.toml
 *.swp
 *.swo
 *~
+
+# MagicMock
+MagicMock/
 
 # assets目录说明
 # assets目录包含项目所需的静态资源文件,应该包含在版本控制中
