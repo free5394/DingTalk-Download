@@ -1,0 +1,73 @@
+# IDE配置文件（适配Trae IDE）
+.trae/
+.vscode/
+.idea/
+.history/
+
+# claude
+.claude/
+CLAUDE.local.md
+
+# opencode
+.omo/
+
+# codex
+.codex/
+
+# Python缓存文件
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.pyre/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# 环境文件
+venv/
+env/
+ENV/
+.env
+.env.local
+
+# 日志与临时文件
+*.log
+logs/
+Logs/
+tmp/
+temp/
+
+# project
+Downloads/
+*.m3u8
+
+# 测试覆盖率报告（新增）
+.coverage
+coverage.xml
+htmlcov/
+
+# Python 构建和分发（新增）
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Config
+.env
+config.toml
+
+# 其他临时文件（新增）
+.tox/
+.cache/
+*.swp
+*.swo
+*~
+
+# assets目录说明
+# assets目录包含项目所需的静态资源文件,应该包含在版本控制中
+# assets/bin/: 外部二进制程序(N_m3u8DL-RE.exe, ffmpeg.exe等)
+# assets/template/: 模板文件(批量下载模板.xlsx等)
+# assets/ICO/: 图标资源文件(icon.ico, icon.png等)

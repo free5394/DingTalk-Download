@@ -1,0 +1,6 @@
+selenium>=4.6.0
+pandas
+openpyxl
+xlrd
+tkintertable
+PyYAML>=6.0
