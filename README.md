@@ -4,7 +4,7 @@
 
 钉钉直播回放下载工具 - 一键下载钉钉直播回放视频
 
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
+[![Python](https://img.shields.io/badge/Python-3.13%2B-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Black](https://img.shields.io/badge/Code%20Style-Black-black.svg)](https://github.com/psf/black)
 
@@ -69,8 +69,9 @@ DingTalk-Download/
 │   ├── development_standard.md             # 开发规范文档
 │   ├── development_guide.md                # 开发指南文档
 │   └── project_status.md                   # 项目现状记录
-├── requirements.txt                        # Python依赖包列表
-├── requirements-dev.txt                    # 开发依赖包列表
+├── pyproject.toml                          # 项目元数据与依赖声明（PEP 621）
+├── uv.lock                                 # 依赖锁定文件（uv 生成，纳入版本控制）
+├── .python-version                         # 固定 Python 版本
 ├── .gitignore                              # Git忽略文件配置
 ├── .trae/                                  # Trae IDE配置目录
 │   └── rules/
@@ -84,15 +85,15 @@ DingTalk-Download/
 - **tests/**: 测试代码目录，包含单元测试、集成测试和测试数据
 - **assets/**: 静态资源目录，包含外部二进制程序、模板文件和图标资源
 - **docs/**: 文档目录，包含开发规范、开发指南和项目记录
-- **requirements.txt**: 项目运行所需的 Python 依赖包
-- **requirements-dev.txt**: 开发所需的额外依赖包（测试、代码格式化等）
+- **pyproject.toml**: 项目元数据与依赖声明
+- **uv.lock**: 依赖锁定文件，由 `uv lock` 生成并纳入版本控制
 
 ## 快速开始
 
 ### 环境要求
 
 - **操作系统**：Windows 10/11、macOS 10.14+、Linux（Ubuntu 18.04+）
-- **Python 版本**：Python 3.8 或更高版本
+- **Python 版本**：Python 3.13 或更高版本
 - **浏览器**：Edge、Chrome 或 Firefox（需安装对应浏览器）
 - **网络**：稳定的网络连接，用于访问钉钉平台
 
@@ -107,28 +108,18 @@ DingTalk-Download/
 
 #### 方式二：从源码安装
 
+需要先安装 [uv](https://docs.astral.sh/uv/getting-started/installation/)。
+
 ```bash
 # 克隆项目
 git clone https://github.com/free5394/DingTalk-Download.git
 cd DingTalk-Download
 
-# 创建虚拟环境
-python -m venv venv
-
-# 激活虚拟环境
-# Windows
-venv\Scripts\activate
-# macOS/Linux
-source venv/bin/activate
-
-# 安装依赖
-pip install -r requirements.txt
-
-# 安装开发依赖（可选）
-pip install -r requirements-dev.txt
+# 同步运行时与开发依赖（自动创建 .venv 并安装 pyproject.toml + uv.lock 锁定的包）
+uv sync --all-groups
 
 # 运行程序
-python -m src.dingtalk_downloader.main
+uv run python -m src.dingtalk_downloader.main
 ```
 
 ### 基本使用
@@ -168,14 +159,14 @@ python -m src.dingtalk_downloader.main
 [Black](https://black.readthedocs.io/) 是 Python 社区广泛使用的代码格式化工具。
 
 ```bash
-# 安装
-pip install -r requirements-dev.txt
+# 安装开发依赖（含 black）
+uv sync --all-groups
 
 # 格式化代码
-python -m black src tests
+uv run black src tests
 
 # 检查格式
-python -m black --check .
+uv run black --check .
 ```
 
 ### Pytest 测试框架

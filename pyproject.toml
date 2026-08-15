@@ -10,7 +10,7 @@ name = "dingtalk-downloader"
 version = "1.5.0"
 description = "钉钉直播回放下载工具"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.13"
 license = {text = "MIT"}
 authors = [
     {name = "Your Name", email = "your.email@example.com"}
@@ -20,15 +20,13 @@ classifiers = [
     "Intended Audience :: End Users/Desktop",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.13",
 ]
 dependencies = [
-    "selenium>=4.0.0",
-    "requests>=2.28.0",
+    "selenium>=4.6.0",
     "openpyxl>=3.0.0",
+    "pandas>=2.0.0",
+    "PyYAML>=6.0",
 ]
 
 [project.optional-dependencies]
@@ -40,6 +38,18 @@ dev = [
     "flake8>=6.0.0",
     "mypy>=1.0.0",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-mock>=3.10.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+]
+
+[tool.uv]
 
 [tool.black]
 line-length = 100
