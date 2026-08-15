@@ -65,10 +65,6 @@ DingTalk-Download/
 │       ├── icon-512x512.png
 │       ├── icon.ico
 │       └── icon.png
-├── docs/                                   # 文档目录
-│   ├── development_standard.md             # 开发规范文档
-│   ├── development_guide.md                # 开发指南文档
-│   └── project_status.md                   # 项目现状记录
 ├── pyproject.toml                          # 项目元数据与依赖声明（PEP 621）
 ├── uv.lock                                 # 依赖锁定文件（uv 生成，纳入版本控制）
 ├── .python-version                         # 固定 Python 版本
