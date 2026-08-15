@@ -63,14 +63,14 @@ class M3u8Parser:
             url: 钉钉直播回放分享链接
 
         Returns:
-            m3u8 链接，如果提取失败则返回 None,
-            提取到的 m3u8 链接列表长度为 1 时，返回该链接；
-            提取到的 m3u8 链接列表长度大于 1 时，返回最后一个链接。
-
+            m3u8 链接
 
         Raises:
-            Exception: 提取失败时
+            M3u8ParseError: 浏览器驱动未初始化或提取失败时
         """
+        if self.browser.driver is None:
+            raise M3u8ParseError("浏览器驱动未初始化，请先调用 create_driver()")
+
         parsed_url = urlparse(url)
         query_params = parse_qs(parsed_url.query)
         live_uuid = query_params.get("liveUuid", [None])[FIRST_ELEMENT_INDEX]
@@ -122,6 +122,9 @@ class M3u8Parser:
         Raises:
             M3u8ParseError: 下载失败时
         """
+        if self.browser.driver is None:
+            raise M3u8ParseError("浏览器驱动未初始化，请先调用 create_driver()")
+
         try:
             script = (
                 "return fetch(arguments[0], { method: 'GET' })" ".then(response => response.text())"
@@ -172,6 +175,9 @@ class M3u8Parser:
 
         通过 JavaScript 刷新页面。
         """
+        if self.browser.driver is None:
+            raise M3u8ParseError("浏览器驱动未初始化，请先调用 create_driver()")
+
         try:
             self.browser.driver.execute_script("location.reload();")
             logger.debug("页面已刷新")
