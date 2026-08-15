@@ -4,6 +4,9 @@
 .idea/
 .history/
 
+
+.opencode/
+
 # claude
 .claude/
 CLAUDE.local.md
