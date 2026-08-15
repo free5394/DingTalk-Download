@@ -14,6 +14,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 import logging
@@ -104,7 +105,7 @@ class BrowserDriver(ABC):
         """
         pass
 
-    def get_element_by_xpath(self, xpath: str) -> Optional[WebDriver]:
+    def get_element_by_xpath(self, xpath: str) -> Optional[WebElement]:
         """
         通过XPath获取元素。
 
@@ -114,13 +115,13 @@ class BrowserDriver(ABC):
             xpath: XPath表达式
 
         Returns:
-            WebDriver: 元素对象，如果driver未初始化则返回None
+            WebElement: 元素对象，如果driver未初始化则返回None
         """
         if self.driver:
             return self.driver.find_element(By.XPATH, xpath)
         return None
 
-    def get_element_by_class_name(self, class_name: str) -> Optional[WebDriver]:
+    def get_element_by_class_name(self, class_name: str) -> Optional[WebElement]:
         """
         通过类名获取元素。
 
@@ -130,7 +131,7 @@ class BrowserDriver(ABC):
             class_name: 类名
 
         Returns:
-            WebDriver: 元素对象，如果driver未初始化则返回None
+            WebElement: 元素对象，如果driver未初始化则返回None
         """
         if self.driver:
             return self.driver.find_element(By.CLASS_NAME, class_name)
