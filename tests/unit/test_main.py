@@ -17,7 +17,13 @@ from unittest.mock import Mock, patch
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
 
-from dingtalk_downloader.config.yaml_config import ConfigLoadError, ConfigValidationError
+# 引入 main 子模块作为对象引用：直接 `import as` 会被包属性 main 函数遮蔽，
+# 所以走 importlib 取真实模块对象。
+from importlib import import_module  # noqa: E402
+
+main_module = import_module("dingtalk_downloader.main")  # noqa: E402
+
+from dingtalk_downloader.config.yaml_config import ConfigLoadError, ConfigValidationError  # noqa: E402
 from dingtalk_downloader.config.constants import (
     BROWSER_TYPE_EDGE,
     BROWSER_TYPE_CHROME,
@@ -32,7 +38,7 @@ def test_single_mode_with_default_options():
     """测试单个视频下载模式 - 使用默认选项"""
     mock_user_controller = Mock()
     with patch("builtins.input") as mock_input, patch(
-        "dingtalk_downloader.main.Downloader"
+        "dingtalk_downloader.core.downloader.Downloader"
     ) as mock_downloader_class:
 
         mock_user_controller.get_user_input.return_value = (
@@ -55,7 +61,7 @@ def test_single_mode_with_manual_options():
     """测试单个视频下载模式 - 手动选择选项"""
     mock_user_controller = Mock()
     with patch("builtins.input") as mock_input, patch(
-        "dingtalk_downloader.main.Downloader"
+        "dingtalk_downloader.core.downloader.Downloader"
     ) as mock_downloader_class:
 
         mock_user_controller.get_user_input.return_value = (
@@ -90,7 +96,7 @@ def test_single_mode_exception():
     """测试单个视频下载模式 - 异常处理"""
     mock_user_controller = Mock()
     with patch("builtins.input") as mock_input, patch(
-        "dingtalk_downloader.main.Downloader"
+        "dingtalk_downloader.core.downloader.Downloader"
     ) as mock_downloader_class:
 
         mock_input.side_effect = [
@@ -119,9 +125,9 @@ def test_batch_mode_with_default_options():
     try:
         mock_user_controller = Mock()
         with patch("builtins.input") as mock_input, patch(
-            "dingtalk_downloader.main.FileReader"
+            "dingtalk_downloader.utils.file_reader.FileReader"
         ) as mock_file_reader_class, patch(
-            "dingtalk_downloader.main.Downloader"
+            "dingtalk_downloader.core.downloader.Downloader"
         ) as mock_downloader_class:
 
             mock_user_controller.get_user_input.return_value = temp_file_path
@@ -159,9 +165,9 @@ def test_batch_mode_with_manual_options():
     try:
         mock_user_controller = Mock()
         with patch("builtins.input") as mock_input, patch(
-            "dingtalk_downloader.main.FileReader"
+            "dingtalk_downloader.utils.file_reader.FileReader"
         ) as mock_file_reader_class, patch(
-            "dingtalk_downloader.main.Downloader"
+            "dingtalk_downloader.core.downloader.Downloader"
         ) as mock_downloader_class:
 
             mock_user_controller.get_user_input.return_value = temp_file_path
@@ -189,7 +195,7 @@ def test_batch_mode_keyboard_interrupt():
     """测试批量下载模式 - 用户中断"""
     mock_user_controller = Mock()
     with patch("builtins.input") as mock_input, patch(
-        "dingtalk_downloader.main.FileReader"
+        "dingtalk_downloader.utils.file_reader.FileReader"
     ) as mock_file_reader_class:
         mock_input.side_effect = KeyboardInterrupt()
 
@@ -212,7 +218,7 @@ def test_batch_mode_exception():
     try:
         mock_user_controller = Mock()
         with patch("builtins.input") as mock_input, patch(
-            "dingtalk_downloader.main.FileReader"
+            "dingtalk_downloader.utils.file_reader.FileReader"
         ) as mock_file_reader_class:
 
             mock_user_controller.get_user_input.return_value = temp_file_path
@@ -231,8 +237,8 @@ def test_batch_mode_exception():
 def test_main_single_mode():
     """测试主程序入口 - 单个视频下载模式"""
     with patch("builtins.input") as mock_input, patch(
-        "dingtalk_downloader.main.YamlConfig"
-    ) as mock_yaml_config_class, patch("dingtalk_downloader.main.single_mode") as mock_single_mode:
+        "dingtalk_downloader.config.yaml_config.YamlConfig"
+    ) as mock_yaml_config_class, patch.object(main_module, "single_mode") as mock_single_mode:
 
         mock_input.side_effect = ["1"]
 
@@ -248,8 +254,8 @@ def test_main_single_mode():
 def test_main_batch_mode():
     """测试主程序入口 - 批量下载模式"""
     with patch("builtins.input") as mock_input, patch(
-        "dingtalk_downloader.main.YamlConfig"
-    ) as mock_yaml_config_class, patch("dingtalk_downloader.main.batch_mode") as mock_batch_mode:
+        "dingtalk_downloader.config.yaml_config.YamlConfig"
+    ) as mock_yaml_config_class, patch.object(main_module, "batch_mode") as mock_batch_mode:
 
         mock_input.side_effect = ["2"]
 
@@ -265,7 +271,7 @@ def test_main_batch_mode():
 def test_main_keyboard_interrupt():
     """测试主程序入口 - 用户中断"""
     with patch("builtins.input") as mock_input, patch(
-        "dingtalk_downloader.main.YamlConfig"
+        "dingtalk_downloader.config.yaml_config.YamlConfig"
     ) as mock_yaml_config_class:
 
         mock_input.side_effect = KeyboardInterrupt()
@@ -283,7 +289,7 @@ def test_main_keyboard_interrupt():
 def test_main_exception():
     """测试主程序入口 - 异常处理"""
     with patch("builtins.input") as mock_input, patch(
-        "dingtalk_downloader.main.YamlConfig"
+        "dingtalk_downloader.config.yaml_config.YamlConfig"
     ) as mock_yaml_config_class:
 
         mock_input.side_effect = Exception("输入错误")
@@ -301,8 +307,8 @@ def test_main_exception():
 def test_main_default_mode():
     """测试主程序入口 - 默认模式"""
     with patch("builtins.input") as mock_input, patch(
-        "dingtalk_downloader.main.YamlConfig"
-    ) as mock_yaml_config_class, patch("dingtalk_downloader.main.single_mode") as mock_single_mode:
+        "dingtalk_downloader.config.yaml_config.YamlConfig"
+    ) as mock_yaml_config_class, patch.object(main_module, "single_mode") as mock_single_mode:
 
         mock_input.side_effect = [""]
 
@@ -319,7 +325,7 @@ def test_single_mode_edge_browser():
     """测试单个视频下载模式 - Edge浏览器"""
     mock_user_controller = Mock()
     with patch("builtins.input") as mock_input, patch(
-        "dingtalk_downloader.main.Downloader"
+        "dingtalk_downloader.core.downloader.Downloader"
     ) as mock_downloader_class:
 
         mock_user_controller.get_user_input.return_value = (
@@ -340,7 +346,7 @@ def test_single_mode_chrome_browser():
     """测试单个视频下载模式 - Chrome浏览器"""
     mock_user_controller = Mock()
     with patch("builtins.input") as mock_input, patch(
-        "dingtalk_downloader.main.Downloader"
+        "dingtalk_downloader.core.downloader.Downloader"
     ) as mock_downloader_class:
 
         mock_user_controller.get_user_input.return_value = (
@@ -361,7 +367,7 @@ def test_single_mode_firefox_browser():
     """测试单个视频下载模式 - Firefox浏览器"""
     mock_user_controller = Mock()
     with patch("builtins.input") as mock_input, patch(
-        "dingtalk_downloader.main.Downloader"
+        "dingtalk_downloader.core.downloader.Downloader"
     ) as mock_downloader_class:
 
         mock_user_controller.get_user_input.return_value = (
@@ -382,7 +388,7 @@ def test_single_mode_default_save_mode():
     """测试单个视频下载模式 - 默认保存模式"""
     mock_user_controller = Mock()
     with patch("builtins.input") as mock_input, patch(
-        "dingtalk_downloader.main.Downloader"
+        "dingtalk_downloader.core.downloader.Downloader"
     ) as mock_downloader_class:
 
         mock_user_controller.get_user_input.return_value = (
@@ -403,7 +409,7 @@ def test_single_mode_manual_save_mode():
     """测试单个视频下载模式 - 手动保存模式"""
     mock_user_controller = Mock()
     with patch("builtins.input") as mock_input, patch(
-        "dingtalk_downloader.main.Downloader"
+        "dingtalk_downloader.core.downloader.Downloader"
     ) as mock_downloader_class:
 
         mock_user_controller.get_user_input.return_value = (
@@ -423,9 +429,9 @@ def test_single_mode_manual_save_mode():
 def test_main_config_loading():
     """测试主程序入口 - 配置加载"""
     with patch("builtins.input") as mock_input, patch(
-        "dingtalk_downloader.main.YamlConfig"
-    ) as mock_yaml_config_class, patch("builtins.print") as mock_print, patch(
-        "dingtalk_downloader.main.single_mode"
+        "dingtalk_downloader.config.yaml_config.YamlConfig"
+    ) as mock_yaml_config_class, patch("builtins.print") as mock_print, patch.object(
+        main_module, "single_mode"
     ):
 
         mock_input.side_effect = [""]
@@ -455,7 +461,7 @@ def test_main_config_loading():
 
 def test_main_config_load_error():
     """测试主程序入口 - 配置加载失败"""
-    with patch("dingtalk_downloader.main.YamlConfig") as mock_yaml_config_class:
+    with patch("dingtalk_downloader.config.yaml_config.YamlConfig") as mock_yaml_config_class:
 
         mock_yaml_config_class.get_instance.side_effect = ConfigLoadError(
             "配置文件不存在: config/app.yaml"
@@ -469,7 +475,7 @@ def test_main_config_load_error():
 
 def test_main_config_validation_error():
     """测试主程序入口 - 配置验证失败"""
-    with patch("dingtalk_downloader.main.YamlConfig") as mock_yaml_config_class:
+    with patch("dingtalk_downloader.config.yaml_config.YamlConfig") as mock_yaml_config_class:
 
         mock_config = Mock()
         mock_config.load.side_effect = ConfigValidationError("缺少必填配置项: app.build_date")
