@@ -50,7 +50,7 @@ class FileValidator:
         file_path = file_path.strip()
 
         FileValidator._check_path_not_empty(file_path)
-        FileValidator._check_path_traversal(file_path)
+        file_path = FileValidator._check_path_traversal(file_path)
         FileValidator._check_file_extension(file_path)
         FileValidator._check_file_exists(file_path)
         FileValidator._check_is_file(file_path)
@@ -94,14 +94,18 @@ class FileValidator:
             )
 
     @staticmethod
-    def _check_path_traversal(file_path: str) -> None:
+    def _check_path_traversal(file_path: str) -> str:
         """
         检查路径遍历攻击。
 
         确保文件路径在预期的工作目录内，防止路径遍历攻击。
+        若为符号链接，返回解析后的真实路径。
 
         Args:
             file_path: 文件路径
+
+        Returns:
+            若为符号链接则返回解析后的真实路径，否则原样返回
 
         Raises:
             ValueError: 检测到路径遍历攻击时
@@ -115,6 +119,7 @@ class FileValidator:
 
             if real_path != abs_path:
                 logger.warning(f"检测到符号链接: {file_path} -> {real_path}")
+                file_path = str(real_path)
 
             if not str(abs_path).startswith(str(current_dir)):
                 logger.error(f"检测到路径遍历攻击: {file_path}")
@@ -135,6 +140,8 @@ class FileValidator:
         except (OSError, ValueError) as e:
             logger.error(f"路径验证失败: {e}")
             raise ValueError(f"路径验证失败: {e}") from e
+
+        return file_path
 
     @staticmethod
     def _check_file_exists(file_path: str) -> None:
