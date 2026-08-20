@@ -1,23 +1,92 @@
-# IDE配置文件（适配Trae IDE）
-.trae/
+### common ###
+HELP.md
+
+### java ###
+*.class
+
+### gradle ###
+.gradle/
+gradle/
+build/
+
+### maven ###
+target/
+
+### eclipse ###
+.settings/
+.project
+.classpath
+
+### STS ###
+.apt_generated
+.factorypath
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+classes/
+/out/
+*.iws
+*.iml
+*.ipr
+.fastRequest
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
 .vscode/
-.idea/
 .history/
 
-# opencode
-.opencode/
-.sisyphus/
-.omo/
+### Trae ###
+.trae/
 
-# claude
+### agnet ###
+.agents/
+.codegraph/
+.scratch/
+
+### claude ###
 .claude/
-CLAUDE.local.md
 
-# opencode
+### codex ###
+.codex/
+
+### opencode ###
+.opencode/
 .omo/
 
-# codex
-.codex/
+# 工作树（git worktree add .worktrees/<branch> 隔离开发）
+.worktrees/
+
+### lombock ###
+lombok.config
+
+### temp ###
+temp/
+tmp/
+logs/
+*.log
+*.cache
+*.diff
+*.patch
+*.tmp
+*.java~
+*.properties~
+*.xml~
+
+### system ignore ###
+.DS_Store
+Thumbs.db
+
+# 构建产物
+dist/
 
 # Python缓存文件
 __pycache__/
@@ -41,13 +110,6 @@ ENV/
 .env
 .env.local
 
-# 日志与临时文件
-*.log
-logs/
-Logs/
-tmp/
-temp/
-
 # project
 Downloads/
 *.m3u8
@@ -65,7 +127,6 @@ build/
 
 # Config
 .review-venv/
-.env
 config.toml
 
 # 其他临时文件（新增）
